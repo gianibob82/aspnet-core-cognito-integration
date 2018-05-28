@@ -80,9 +80,9 @@ With example how to get claims
     
     ### appsettings.json
     
-    "ICognitoConfig": {
+    `"ICognitoConfig": {
     "ClientId": "",
     "ClientSecret": "",
     "LogoutUrl": "https://{your_client_url}/logout",
     "LogoutRelPath": "/signedout"
-  }
+  }`
