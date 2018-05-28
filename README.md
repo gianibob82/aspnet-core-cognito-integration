@@ -27,7 +27,7 @@ As of today 28/05/2018 there's an open bug about this.
                     // this makes signout working
                     OnRedirectToIdentityProviderForSignOut = OnRedirectToIdentityProviderForSignOut
                 };
-            });`
+            })`
 
 here's the method
 `private Task OnRedirectToIdentityProviderForSignOut(RedirectContext context)
