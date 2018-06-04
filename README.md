@@ -1,13 +1,38 @@
 # aspnet-core-cognito-integration
 Cognito OpenId Connect integration in aspnet core razor project. This is all you need to integrate Cognito in your application as OpenId Connect so that you'll end up using Cognito UI pages. 
 
-Be aware: Aspnet core OpenIdConnect implementation is not working properly behind proxies and when deployed to AWS API Gateway.
-As of today 28/05/2018 there's an open bug about this.
+Use AspNetCore.DataProtection.Aws.S3 to store the machine keys.
 
 ##StartUp.cs
 
 ### in ConfigureServices
-`services.AddAuthentication(options =>
+`
+services.AddDataProtection()
+            .PersistKeysToAwsS3(new AmazonS3Client(Configuration.GetValue<string>("AWS:AccessKey")
+                , Configuration.GetValue<string>("AWS:SecretKey")
+                , awsOptions.Region), new S3XmlRepositoryConfig("bucketname")
+                // Configuration has defaults; all below are OPTIONAL
+                {
+                    // How many concurrent connections will be made to S3 to retrieve key data
+                    MaxS3QueryConcurrency = 10,
+                    // Custom prefix in the S3 bucket enabling use of folders
+                    KeyPrefix = "MyKeys/",
+                    // Customise storage class for key storage
+                    StorageClass = S3StorageClass.OneZoneInfrequentAccess,
+                    //// Customise encryption options (these can be mutually exclusive - don't just copy & paste!)
+                    //ServerSideEncryptionMethod = ServerSideEncryptionMethod.AES256,
+                    //ServerSideEncryptionCustomerMethod = ServerSideEncryptionCustomerMethod.AES256,
+                    //ServerSideEncryptionCustomerProvidedKey = "MyBase64Key",
+                    // ServerSideEncryptionCustomerProvidedKeyMd5 = "MD5OfMyBase64Key",
+                    //ServerSideEncryptionKeyManagementServiceKeyId = "AwsKeyManagementServiceId",
+                    //// Compress stored XML before write to S3
+                    //ClientSideCompression = true,
+                    //// Validate downloads
+                    //ValidateETag = false,
+                    //ValidateMd5Metadata = true
+                });
+                
+services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
